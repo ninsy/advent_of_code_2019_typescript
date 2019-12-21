@@ -22,4 +22,7 @@ const run = async (): Promise<number> => {
     return masses.reduce((acc, curr) => acc + getTotalFuel(curr), 0);
 }
 
-run().then(totalFuel => console.log(totalFuel));
+if (require.main === module) {
+    run().then(totalFuel => console.log(totalFuel));
+}
+

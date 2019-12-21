@@ -15,4 +15,7 @@ const run = async (): Promise<number> => {
     }, 0);
 }
 
-run().then(totalFuel => console.log(totalFuel));
+if (require.main === module) {
+    run().then(totalFuel => console.log(totalFuel));
+}
+
