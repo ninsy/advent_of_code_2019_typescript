@@ -1,4 +1,4 @@
-import { processCoords } from './part1';
+import { processCoords, produceSegments, CableCoords, CableSegments } from './part1';
 
 describe('Process coords', () => {
     it('gives proper coordinates', async () => {
@@ -23,4 +23,33 @@ describe('Process coords', () => {
             [2, 3],
         ]);
     });
+});
+
+describe('Produce segments', () => {
+    it('Produces proper segments for array of points', async () => {
+        const input: CableCoords = [
+            [0, 0],
+            [8, 0],
+            [8, 5],
+            [3, 5],
+            [3, 2],
+        ];
+        const expectedOutput: CableSegments = [
+            [[0, 0], [8, 0]],
+            [[8, 0], [8, 5]],
+            [[8, 5], [3, 5]],
+            [[3, 5], [3, 2]],
+        ];
+        
+        const output = produceSegments(input);
+        expect(output).toEqual(expectedOutput);
+    });
+});
+
+describe('distance for point', () =>{
+
+})
+
+describe('distance for whole cluster of point',() =>{
+
 })
