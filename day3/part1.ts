@@ -6,28 +6,36 @@ const readFile = promisify(_readFile);
 
 export type CableCoords = Array<SinglePoint>;
 export type SinglePoint = [number, number];
-export type Segment = [SinglePoint, SinglePoint];
-export type CableSegments = Array<Segment>;
 
-export const produceSegments = (cableCoords: CableCoords): CableSegments => {
-    if (cableCoords.length < 2) {
-        throw new Error('Need at least 2 points')   
+const fillUntil = (output: CableCoords, point: SinglePoint, coord: number, diff: number): void => {
+    let toBeInserted: SinglePoint = Object.assign([], point);
+    for (let i = 0; i < diff; i++ ) {
+        toBeInserted[coord] += i;
+        output.push(toBeInserted);
     }
-    const localCoords: CableCoords = Object.assign([], cableCoords);
+}
 
+export const fillFields = (coords: CableCoords): CableCoords => {
+    const localCoords: CableCoords = Object.assign([], coords);
     let prevCoord: SinglePoint = localCoords.shift() as SinglePoint;
-    let output: CableSegments = [];
+    let output: CableCoords = [];
 
     while (true) {
         const currCoord = localCoords.shift();
         if (typeof currCoord === 'undefined') break;
-        output.push([prevCoord, currCoord]);
+
+        if (currCoord[0] === prevCoord[0]) {
+            // Difference in Ys
+            fillUntil(output, prevCoord, 1, Math.abs(currCoord[1] - prevCoord[1]));
+        } else if (currCoord[1] === prevCoord[1]) {
+            // Difference in Xs
+            fillUntil(output, prevCoord, 0, Math.abs(currCoord[0] - prevCoord[0]));
+        }
         prevCoord = currCoord;
     }
-
     return output;
 };
-
+ 
 export const processCoords = (coords: string[]): CableCoords => {
     const cableCoords: CableCoords = [[0,0]];
     for (let coord of coords) {
